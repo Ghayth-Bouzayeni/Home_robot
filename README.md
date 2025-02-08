@@ -95,7 +95,7 @@ Upload `index.html` to Netlify to access it from any device.
 ## Example Images
 
 ### Robot Interface
-![Robot Interface](static\scanned_images\interface.png)(static\scanned_images\interface1.png)
+![Robot Interface](static\scanned_images\interface.png)
 
 
 ### Person Detection
@@ -109,9 +109,3 @@ This project is licensed under the Apache License 2.0.
 
 For any questions, reach out to: Ghayth Bouzayeni (ghayth@todo.todo)
 ```
-
-### Notes:
-1. **Image paths:** I used `images/robot_interface.png` and `images/person_detection.png` for the example images. If you have different filenames or want to upload them to a different folder, make sure to adjust the image paths accordingly.
-2. **Upload to GitHub:** After updating this file, commit and push it to your GitHub repository.
-
-Let me know if you need any further adjustments!
