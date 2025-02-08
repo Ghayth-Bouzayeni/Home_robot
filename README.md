@@ -95,11 +95,11 @@ Upload `index.html` to Netlify to access it from any device.
 ## Example Images
 
 ### Robot Interface
-![Robot Interface](static\scanned_images\interface.png)
+![Robot Interface](static/scanned_images/interface2.png)
 
 
 ### Person Detection
-![Person Detection](static\scanned_images\kitchen.jpg)
+![Person Detection](static/scanned_images/kitchen.jpg)
 
 ## License
 
@@ -108,4 +108,4 @@ This project is licensed under the Apache License 2.0.
 ## Contact
 
 For any questions, reach out to: Ghayth Bouzayeni (ghayth@todo.todo)
-```
+
