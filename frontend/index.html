@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Controller</title>
+    <script>
+        async function sendCommand(command) {
+            const response = await fetch('https://june-few-tn-nc.trycloudflare.com/send_command', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command })
+            });
+            const result = await response.json();
+            alert(result.status || result.error);
+            speak(result.status || result.error);
+        }
+
+        async function navigateTo(location) {
+    try {
+        const response = await fetch('https://june-few-tn-nc.trycloudflare.com/navigate_to', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ location })
+        });
+
+        // Check for successful response
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        // Ensure result is an object and contains a status
+        if (result && result.status) {
+            return result;  // Return result if status exists
+        } else {
+            throw new Error("Invalid response structure from server.");
+        }
+
+    } catch (error) {
+        console.error("Error in navigateTo:", error);
+        alert("An error occurred while navigating.");
+        speak("An error occurred while navigating.");
+        return { error: error.message };  // Return error message for scanning
+    }
+}
+
+        async function cancelNavigation() {
+            const response = await fetch('https://june-few-tn-nc.trycloudflare.com/cancel_navigation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            alert(result.status || result.error);
+            speak(result.status || result.error);
+        }
+
+        // Voice recognition setup
+        document.addEventListener("DOMContentLoaded", function () {
+            const voiceButton = document.getElementById("voice-command");
+            const status = document.getElementById("voice-status");
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                status.textContent = "Speech Recognition API is not supported in this browser.";
+                voiceButton.disabled = true;
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.continuous = false;
+
+            voiceButton.addEventListener("click", () => {
+                status.textContent = "Listening...";
+                recognition.start();
+            });
+
+            recognition.onresult = (event) => {
+                const command = event.results[0][0].transcript.toLowerCase();
+                status.textContent = `Heard: "${command}"`;
+                processVoiceCommand(command);
+            };
+
+            recognition.onerror = (event) => {
+                status.textContent = `Error: ${event.error}`;
+            };
+
+            function processVoiceCommand(command) {
+                if (command.includes("go to kitchen")) {
+                    navigateTo("kitchen");
+                } else if (command.includes("go to bedroom")) {
+                    navigateTo("bedroom");
+                } else if (command.includes("cancel navigation")) {
+                    cancelNavigation();
+                } else if (command.includes("move forward")) {
+                    sendCommand("move forward");
+                } else if (command.includes("stop")) {
+                    sendCommand("stop");
+                } else if (command.includes("turn left")) {
+                    sendCommand("turn left");
+                } else if (command.includes("turn right")) {
+                    sendCommand("turn right");
+                } else if (command.includes("scan home")) {
+                    scanHome();
+                } else if (command.includes("capture person")) {
+                    capturePerson('house');
+                } else {
+                    alert("Unknown command: " + command);
+                    speak("Unknown command: " + command);
+                }
+            }
+        });
+
+        
+
+        async function capturePerson(location) {
+    try {
+        const response = await fetch('https://june-few-tn-nc.trycloudflare.com/detect_person');
+
+        if (response.status === 404) {
+            alert(`No person detected in ${location}!`);
+            speak(`No person detected in ${location}.`);
+            document.getElementById(`personImage${capitalizeFirstLetter(location)}`).style.display = "none";
+            return;
+        }
+
+        if (!response.ok) {
+            alert("An error occurred: " + response.statusText);
+            speak("An error occurred while detecting the person.");
+            return;
+        }
+
+        const imageBlob = await response.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+
+        const imageElement = document.getElementById(`personImage${capitalizeFirstLetter(location)}`);
+        if (imageElement) {
+            imageElement.src = imageUrl;
+            imageElement.style.display = "block"; // Show the image
+        } else {
+            console.error(`No image field found for location: ${location}`);
+        }
+
+        alert(`Person detected in the ${location}!`);
+        speak(`Person detected in the ${location}.`);
+    } catch (error) {
+        console.error("Error capturing person:", error);
+        alert("Failed to detect person. Check the console for details.");
+        speak("Failed to detect person. Please try again.");
+    }
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+
+    function speak(message) {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterabnce(message);
+        synth.speak(utterance);
+    }
+
+
+
+
+
+
+
+
+ 
+    async function scanHome() {
+    try {
+        // First, call navigateTo for the kitchen
+        const navigateResponseKitchen = await navigateTo('bedroom');
+        
+        // Check if navigateResponseKitchen is a valid object and has a status
+        if (navigateResponseKitchen && navigateResponseKitchen.status === "Goal reached for bedroom") {
+            // If navigation is successful, capture the person in the kitchen
+            await capturePerson('bedroom');
+        } else {
+            throw new Error("Failed to reach kitchen");
+        }
+
+        // Then, call navigateTo for the bedroom
+        const navigateResponseBedroom = await navigateTo('kitchen');
+        
+        // Check if navigateResponseBedroom is a valid object and has a status
+        if (navigateResponseBedroom && navigateResponseBedroom.status === "Goal reached for kitchen") {
+            // If navigation is successful, capture the person in the kitchen
+            await capturePerson('kitchen');
+        } else {
+            throw new Error("Failed to reach bedroom");
+        }
+
+    } catch (error) {
+        console.error("Error in scanHome:", error);
+        alert("An error occurred while scanning home. Please check the console for details.");
+        speak("An error occurred while scanning home.");
+    }
+}
+
+        function speak(text) {
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = "en-US";
+            speech.volume = 1; // Set volume (0 to 1)
+            speech.rate = 1; // Set speed (0.1 to 10)
+            speech.pitch = 1; // Set pitch (0 to 2)
+            window.speechSynthesis.speak(speech);
+        }
+
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #dcdcdc;
+            cursor: not-allowed;
+        }
+
+        #voice-status {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #personImage {
+            max-width: 640px;
+            margin: 10px auto;
+            display: block;
+            border: 1px solid #ccc;
+        }
+
+        .command-buttons {
+            text-align: center;
+        }
+
+        .command-buttons button {
+            background-color: #007BFF;
+        }
+
+        .command-buttons button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Robot Control Interface</h1>
+    
+    <div class="command-buttons">
+        <button onclick="sendCommand('move forward')">Move Forward</button>
+        <button onclick="sendCommand('stop')">Stop</button>
+        <button onclick="sendCommand('turn left')">Turn Left</button>
+        <button onclick="sendCommand('turn right')">Turn Right</button>
+    </div>
+
+    <h2>Navigate to Locations</h2>
+    <div class="command-buttons">
+        <button onclick="navigateTo('kitchen')">Go to Kitchen</button>
+        <button onclick="navigateTo('bedroom')">Go to Bedroom</button>
+        <button onclick="cancelNavigation()">Cancel Navigation</button>
+    </div>
+    <h2>Scan Specific Room</h2>
+    <div class="command-buttons">
+        <div style="margin-bottom: 20px;">
+            <button onclick="capturePerson('kitchen')">Scan Kitchen</button>
+            <br>
+            <img id="personImageKitchen" alt="Detected Person in Kitchen" 
+                 style="width: 100%; max-width: 640px; border: 1px solid black; display: none;">
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <button onclick="capturePerson('bedroom')">Scan Bedroom</button>
+            <br>
+            <img id="personImageBedroom" alt="Detected Person in Bedroom" 
+                 style="width: 100%; max-width: 640px; border: 1px solid black; display: none;">
+        </div>
+    </div>
+    
+
+    <h2>Scan Entire Home</h2>
+    <div class="command-buttons">
+        <button onclick="scanHome()">Scan Home</button>
+        
+    
+    </div>
+
+    <h2>Camera Live Feed</h2>
+    <img src="https://stamps-outcome-coaching-drums.trycloudflare.com/stream?topic=/camera_sensor/image_raw" alt="Camera Feed">
+    
+    <h2>Person Detection</h2>
+    <button onclick="capturePerson('house')">Capture Person</button>
+    <br>
+    <img id="personImageHouse" alt="Detected Person in House" 
+     style="width: 100%; max-width: 640px; border: 1px solid black;">
+    
+    
+
+    <h2>Voice Command</h2>
+    <button id="voice-command">Start Listening</button>
+    <p id="voice-status">Press the button and speak.</p>
+
+</body>
+</html>
