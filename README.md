@@ -95,11 +95,17 @@ Upload `index.html` to Netlify to access it from any device.
 ## Example Images
 
 ### Robot Interface
-![Robot Interface](static/scanned_images/interface2.png)
+![Robot Interface](static/scanned_images/interface1.png)
+                  (static/scanned_images/interface2.png)
+
 
 
 ### Person Detection
 ![Person Detection](static/scanned_images/kitchen.jpg)
+
+### nav and slam
+![Person Detection](static/scanned_images/navigation.gif)
+
 
 ## License
 
