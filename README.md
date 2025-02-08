@@ -93,17 +93,18 @@ Upload `index.html` to Netlify to access it from any device.
 - **Voice Alerts:** If a person is found, an alert is triggered.
 
 ## Example Images
-
 ### Robot Interface
-![Robot Interface](static/scanned_images/interface1.png)
-                  (static/scanned_images/interface2.png)
+
+![Robot Interface 1](static/scanned_images/interface1.png)
+![Robot Interface 2](static/scanned_images/interface2.png)
+
 
 
 
 ### Person Detection
 ![Person Detection](static/scanned_images/kitchen.jpg)
 
-### nav and slam
+### Nav and Slam
 ![Person Detection](static/scanned_images/navigation.gif)
 
 
