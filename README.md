@@ -1,5 +1,3 @@
-
-
 ```markdown
 # Smart Home Robot (ROS2)
 
@@ -41,7 +39,14 @@ colcon build
 source install/setup.bash  # If build fails, try sourcing
 ```
 
-### 3️⃣ Run MQTT Communication
+### 3️⃣ Download YOLOv4 Weights
+
+Due to the large size of the YOLOv4 weights, they are not included in this repository. You must manually download the YOLOv4 weights and place them in the `/yolo` directory.
+
+1. Download YOLOv4 weights from [here](https://github.com/AlexeyAB/darknet/releases/download/yolov4/yolov4.weights).
+2. Move the `yolov4.weights` file to the `/yolo` folder in the project directory.
+
+### 4️⃣ Run MQTT Communication
 
 Start MQTT Subscribers and Publishers:
 
@@ -50,26 +55,26 @@ ros2 run mqtt_communication command_subscriber
 ros2 run mqtt_communication pose_publisher
 ```
 
-### 4️⃣ Start SLAM & Navigation
+### 5️⃣ Start SLAM & Navigation
 
 ```bash
 ros2 launch robot_simulation house_slam.launch.py
 ros2 launch robot_simulation autonomous_navigation.launch.py
 ```
 
-### 5️⃣ Start Video Feed
+### 6️⃣ Start Video Feed
 
 ```bash
 ros2 run robot_simulation compressed_video_stream
 ```
 
-### 6️⃣ Start Backend (Flask App)
+### 7️⃣ Start Backend (Flask App)
 
 ```bash
 python3 app.py
 ```
 
-### 7️⃣ Get Links from Cloudflared/Ngrok
+### 8️⃣ Get Links from Cloudflared/Ngrok
 
 Run two terminals for public URLs:
 
@@ -80,7 +85,7 @@ ngrok http 5000
 
 Replace `localhost:5000` and `localhost:8080` in `index.html` with the provided links.
 
-### 8️⃣ Host Web Interface on Netlify
+### 9️⃣ Host Web Interface on Netlify
 
 Upload `index.html` to Netlify to access it from any device.
 
@@ -93,20 +98,17 @@ Upload `index.html` to Netlify to access it from any device.
 - **Voice Alerts:** If a person is found, an alert is triggered.
 
 ## Example Images
+
 ### Robot Interface
 
 ![Robot Interface 1](static/scanned_images/interface1.png)
 ![Robot Interface 2](static/scanned_images/interface2.png)
-
-
-
 
 ### Person Detection
 ![Person Detection](static/scanned_images/kitchen.jpg)
 
 ### Nav and Slam
 ![Person Detection](static/scanned_images/navigation.gif)
-
 
 ## License
 
@@ -115,4 +117,4 @@ This project is licensed under the Apache License 2.0.
 ## Contact
 
 For any questions, reach out to: Ghayth Bouzayeni (ghayth@todo.todo)
-
+```
