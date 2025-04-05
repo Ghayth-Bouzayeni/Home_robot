@@ -11,6 +11,9 @@ MQTT_PORT = 1883
 MQTT_TOPIC_COMMAND = "robot/command"
 
 client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, 60)
+@app.route('/')
+def home():
+    return jsonify({"status": "App is running"})
 
 
 @app.route('/send_command', methods=['POST'])
