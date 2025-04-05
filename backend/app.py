@@ -1,16 +1,17 @@
 from flask import Flask, request, jsonify
 import paho.mqtt.client as mqtt
-
+from paho.mqtt import client as mqtt_client
 app = Flask(__name__)
 
 # MQTT configuration
-MQTT_BROKER = "localhost"  
+MQTT_BROKER = "localhost"  # The default gateway IP for Docker containers on Linux
+ 
 
 MQTT_PORT = 1883
 MQTT_TOPIC_COMMAND = "robot/command"
 
-mqtt_client = mqtt.Client()
-mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, 60)
+
 
 @app.route('/send_command', methods=['POST'])
 def send_command():
