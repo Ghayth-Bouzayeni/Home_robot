@@ -24,11 +24,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
+          pip install -r backend/requirements.txt  # Update path to requirements.txt
 
       - name: Build Docker image
         run: |
-          docker build -t backend-image .
+          docker build -t backend-image ./backend  # Add the correct path to your Dockerfile
 
       - name: Run Docker container
         run: |
