@@ -1,0 +1,37 @@
+name: CI for DevOps Backend
+
+on:
+  push:
+    branches:
+      - devops-backend  # Trigger on changes to devops-backend branch
+  pull_request:
+    branches:
+      - devops-backend  # Trigger on pull requests to devops-backend branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Install your dependencies
+
+      - name: Run tests
+        run: |
+          # Run tests here, e.g., if you're using pytest:
+          pytest  # Or add your test commands if needed
+      
+      - name: Deploy (if needed)
+        run: |
+          # You can add a deployment command if required.
+          # For example, deploying to a cloud platform or your server
