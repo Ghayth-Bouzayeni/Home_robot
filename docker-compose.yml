@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./backend  # Adjust path if your backend folder is different
+    ports:
+      - "5000:5000"  # Adjust according to the port your backend uses
+
+  frontend:
+    build:
+      context: ./frontend  # Adjust if your frontend is in a different directory
+    ports:
+      - "80:80"  # Expose port 80 for the frontend (Nginx)
+    depends_on:
+      - backend  # Ensures the backend starts before frontend
