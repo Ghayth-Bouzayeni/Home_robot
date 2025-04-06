@@ -36,6 +36,7 @@ jobs:
       # Build frontend Docker image
       - name: Build frontend Docker image
         run: |
+          cd frontend
           docker build -t home_robot-master_frontend:latest ./frontend  
 
       # Run the backend container
