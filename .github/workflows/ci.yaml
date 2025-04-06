@@ -32,10 +32,4 @@ jobs:
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml up -d
 
-      # Optional: Skip pushing to Docker Hub if no secrets are set
-      # Remove the push step if you don't want to push to Docker Hub
-      - name: Optional Push Docker images to Docker Hub (skip if unnecessary)
-        run: |
-          # If pushing is not needed, you can remove this section
-          docker login -u "your-dockerhub-username" -p "your-dockerhub-password"
-          docker-compose -f docker-compose.yml push
+      
