@@ -1,20 +1,34 @@
-# Step 1: Use an official Python runtime as a parent image
+# Use official Python image
 FROM python:3.10-slim
 
-# Step 2: Set the working directory in the container
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create and set working directory
 WORKDIR /app
 
-# Step 3: Copy the current directory contents into the container at /app
-COPY . /app
+# Install Python dependencies first (for layer caching)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install gunicorn  # Production WSGI server
 
-# Step 4: Install any needed dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy application code
+COPY . .
 
-# Step 5: Expose the port the app runs on
+# Health check endpoint (add this to your app.py)
+HEALTHCHECK --interval=30s --timeout=10s \
+    CMD curl -f http://localhost:5000/health || exit 1
+
+# Expose port
 EXPOSE 5000
 
-# Step 6: Define environment variable
-ENV FLASK_APP=app.py
-
-# Step 7: Run the Flask app when the container starts
-CMD ["python", "app.py"]
+# Run with Gunicorn (production-grade)
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:app"]

@@ -15,7 +15,9 @@ client = mqtt_client.Client(mqtt_client.CallbackAPIVersion.VERSION1, 60)
 def home():
     return jsonify({"status": "App is running"})
 
-
+@app.route('/health')
+def health_check():
+    return {"status": "healthy"}, 200
 @app.route('/send_command', methods=['POST'])
 def send_command():
     data = request.json
