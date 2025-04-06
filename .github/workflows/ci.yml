@@ -31,26 +31,19 @@ jobs:
       # Build backend Docker image
       - name: Build backend Docker image
         run: |
-          docker build -t your-dockerhub-username/home_robot-master_backend:latest ./backend  
+          docker build -t home_robot-master_backend:latest ./backend  
 
       # Build frontend Docker image
       - name: Build frontend Docker image
         run: |
-          docker build -t your-dockerhub-username/home_robot-master_frontend:latest ./frontend  
-
-      # Optional: Push the images to Docker Hub
-      - name: Push Docker images to Docker Hub
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push your-dockerhub-username/home_robot-master_backend:latest
-          docker push your-dockerhub-username/home_robot-master_frontend:latest
+          docker build -t home_robot-master_frontend:latest ./frontend  
 
       # Run the backend container
       - name: Run backend Docker container
         run: |
-          docker run -d -p 5000:5000 your-dockerhub-username/home_robot-master_backend:latest
+          docker run -d -p 5000:5000 home_robot-master_backend:latest
 
       # Run the frontend container
       - name: Run frontend Docker container
         run: |
-          docker run -d -p 80:80 your-dockerhub-username/home_robot-master_frontend:latest
+          docker run -d -p 80:80 home_robot-master_frontend:latest
