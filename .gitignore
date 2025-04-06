@@ -1,0 +1,7 @@
+# Ignore Vosk model files
+/frontend/vosk-model-small-en-us-0.15/
+
+# Optionally, ignore other large files or directories
+*.log
+*.tmp
+*.bak
