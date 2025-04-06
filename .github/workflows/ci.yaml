@@ -16,35 +16,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Python for the backend
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      # Install backend dependencies
-      - name: Install backend dependencies
+      # Install Docker Compose
+      - name: Install Docker Compose
         run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt  
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
 
-      # Build backend Docker image
-      - name: Build backend Docker image
+      # Build and run with Docker Compose
+      - name: Build and run with Docker Compose
         run: |
-          docker build -t home_robot-master_backend:latest ./backend  
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml up -d
 
-      # Build frontend Docker image
-      - name: Build frontend Docker image
+      # Optional: Skip pushing to Docker Hub if no secrets are set
+      # Remove the push step if you don't want to push to Docker Hub
+      - name: Optional Push Docker images to Docker Hub (skip if unnecessary)
         run: |
-          cd frontend
-          docker build -t home_robot-master_frontend:latest ./frontend  
-
-      # Run the backend container
-      - name: Run backend Docker container
-        run: |
-          docker run -d -p 5000:5000 home_robot-master_backend:latest
-
-      # Run the frontend container
-      - name: Run frontend Docker container
-        run: |
-          docker run -d -p 80:80 home_robot-master_frontend:latest
+          # If pushing is not needed, you can remove this section
+          docker login -u "your-dockerhub-username" -p "your-dockerhub-password"
+          docker-compose -f docker-compose.yml push
