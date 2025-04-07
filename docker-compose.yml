@@ -43,7 +43,7 @@ services:
       - ROS_DOMAIN_ID=42  # Prevents ROS2 network conflicts
       - MQTT_HOST=mqtt
       - GAZEBO_MODEL_PATH=/ros2_ws/src/robot_simulation/models
-      - DISPLAY=:0
+      
       - TEST_MODE=true  
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
