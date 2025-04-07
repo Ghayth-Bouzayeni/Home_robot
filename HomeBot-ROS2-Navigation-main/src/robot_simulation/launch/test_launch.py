@@ -3,9 +3,12 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     return LaunchDescription([
+        # Start the SLAM node
         Node(
-            package='robot_simulation',
-            executable='test_node',
-            name='test_node'
+            package='slam_toolbox',
+            executable='sync_slam_toolbox_node',
+            name='slam_toolbox',
+            output='screen',
+            parameters=[{'use_sim_time': True}]  # You can set parameters if needed
         )
     ])

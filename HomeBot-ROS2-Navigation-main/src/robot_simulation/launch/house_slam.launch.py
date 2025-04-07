@@ -5,8 +5,9 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-
-
+from launch.substitutions import LaunchConfiguration
+from ament_index_python.packages import get_package_share_directory
+from launch.substitutions import PythonExpression
 def generate_launch_description():
     # Define package paths
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')

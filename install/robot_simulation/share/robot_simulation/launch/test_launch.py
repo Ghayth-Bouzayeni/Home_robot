@@ -1,11 +1,1 @@
-from launch import LaunchDescription
-from launch_ros.actions import Node
-
-def generate_launch_description():
-    return LaunchDescription([
-        Node(
-            package='robot_simulation',
-            executable='test_node',
-            name='test_node'
-        )
-    ])
+/home/ghayth/Home_robot-master/HomeBot-ROS2-Navigation-main/src/robot_simulation/launch/test_launch.py
