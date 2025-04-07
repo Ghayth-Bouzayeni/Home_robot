@@ -43,6 +43,10 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_simulation/launch" TYPE DIRECTORY FILES "/home/ghayth/Home_robot-master/HomeBot-ROS2-Navigation-main/src/robot_simulation/launch/")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/robot_simulation" TYPE DIRECTORY FILES
     "/home/ghayth/Home_robot-master/HomeBot-ROS2-Navigation-main/src/robot_simulation/launch"
     "/home/ghayth/Home_robot-master/HomeBot-ROS2-Navigation-main/src/robot_simulation/config"

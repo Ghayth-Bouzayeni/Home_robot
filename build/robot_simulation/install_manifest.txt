@@ -1,4 +1,9 @@
 /home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/house_slam.launch.py
+/home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/test_launch.py
+/home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/house_sim.launch.py
+/home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/autonomous_navigation.launch.py
+/home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/house_slam.launch.py
+/home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/test_launch.py
 /home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/house_sim.launch.py
 /home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/launch/autonomous_navigation.launch.py
 /home/ghayth/Home_robot-master/install/robot_simulation/share/robot_simulation/config/nav2_config.rviz
