@@ -35,16 +35,17 @@ jobs:
 
       - name: Build ROS2 workspace
         run: |
-          source /opt/ros/humble/setup.bash
-          cd /ros2_ws
-          colcon build --symlink-install
-          source /ros2_ws/install/setup.bash
+          docker-compose exec ros2_gazebo bash -c "
+            source install/setup.bash  
+            cd /ros2_ws
+            colcon build --symlink-install
+          "
 
-      - name: Verify package structure
+      - name: Source ROS2 workspace
         run: |
           docker-compose exec ros2_gazebo bash -c "
-            ls /ros2_ws/install/robot_simulation
-            ls /ros2_ws/install/robot_simulation/lib
+            source /opt/ros/humble/setup.bash
+            source /ros2_ws/install/setup.bash
           "
 
       - name: Test Frontend
