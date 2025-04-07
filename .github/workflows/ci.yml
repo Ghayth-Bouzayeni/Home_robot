@@ -33,6 +33,20 @@ jobs:
       - name: Start services (detached)
         run: docker-compose up -d
 
+      - name: Build ROS2 workspace
+        run: |
+          source /opt/ros/humble/setup.bash
+          cd /ros2_ws
+          colcon build --symlink-install
+          source /ros2_ws/install/setup.bash
+
+      - name: Verify package structure
+        run: |
+          docker-compose exec ros2_gazebo bash -c "
+            ls /ros2_ws/install/robot_simulation
+            ls /ros2_ws/install/robot_simulation/lib
+          "
+
       - name: Test Frontend
         run: |
           docker-compose exec frontend npm test || echo "Frontend tests failed"
