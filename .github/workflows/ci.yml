@@ -57,7 +57,7 @@ jobs:
           docker-compose exec backend pytest || echo "Backend tests failed"
 
       - name: Test ROS2 Nodes
-        timeout-minutes: 10  # Gazebo tests may take longer
+        timeout-minutes: 30  # Gazebo tests may take longer
         run: |
           docker-compose exec ros2_gazebo bash -c "
             source /opt/ros/humble/setup.bash
