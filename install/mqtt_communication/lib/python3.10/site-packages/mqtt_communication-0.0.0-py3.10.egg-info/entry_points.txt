@@ -1,0 +1,4 @@
+[console_scripts]
+command_subscriber = mqtt_communication.command_subscriber:main
+pose_publisher = mqtt_communication.pose_publisher:main
+

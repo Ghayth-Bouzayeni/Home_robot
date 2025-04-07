@@ -920,7 +920,7 @@
             </friction>
           </surface>
         </collision>
-        <collision name='person'>
+        <collision name='person_1'>
           <pose>0 0 -0.02 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -941,7 +941,7 @@
             </friction>
           </surface>
         </collision>
-        <visual name='visual'>
+        <visual name='visuall'>
           <pose>0 0 -0.02 0 -0 0</pose>
           <geometry>
             <mesh>

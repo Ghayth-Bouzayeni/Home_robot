@@ -1,15 +1,64 @@
-version: '3'
+version: '3.8'
+
 services:
   backend:
-    build:
-      context: ./backend  # Adjust path if your backend folder is different
+    build: 
+      context: ./backend
     ports:
-      - "5000:5000"  # Adjust according to the port your backend uses
+      - "5000:5000"
+    environment:
+      - MQTT_HOST=mqtt
+    networks:
+      - robot_network
+    depends_on:
+      - mqtt
 
   frontend:
-    build:
-      context: ./frontend  # Adjust if your frontend is in a different directory
+    build: 
+      context: ./frontend
     ports:
-      - "80:80"  # Expose port 80 for the frontend (Nginx)
+      - "80:80"
+    networks:
+      - robot_network
     depends_on:
-      - backend  # Ensures the backend starts before frontend
+      - backend
+
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"  # WebSocket port for MQTT
+    volumes:
+      - ./mqtt/config:/mosquitto/config
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
+    networks:
+      - robot_network
+
+  ros2_gazebo:
+    build:
+      context: ./HomeBot-ROS2-Navigation-main
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_DOMAIN_ID=42  # Prevents ROS2 network conflicts
+      - MQTT_HOST=mqtt
+      - GAZEBO_MODEL_PATH=/ros2_ws/src/robot_simulation/models
+      - DISPLAY=:0
+      - TEST_MODE=true  # Add test-specific configs
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./HomeBot-ROS2-Navigation-main/src:/ros2_ws/src:rw  # RW access for development
+    networks:
+      - robot_network
+    depends_on:
+      - mqtt
+    privileged: true  # Required for Gazebo
+    restart: unless-stopped
+
+networks:
+  robot_network:
+    driver: bridge
+
+volumes:
+  mqtt_data:
+  mqtt_log:
