@@ -44,7 +44,7 @@ services:
       - MQTT_HOST=mqtt
       - GAZEBO_MODEL_PATH=/ros2_ws/src/robot_simulation/models
       - DISPLAY=:0
-      - TEST_MODE=true  # Add test-specific configs
+      - TEST_MODE=true  
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./HomeBot-ROS2-Navigation-main/src:/ros2_ws/src:rw  # RW access for development
