@@ -68,17 +68,20 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
+      # Tag and Push ROS2 Gazebo Image
       - name: Tag and Push ROS2 Gazebo Image
         run: |
-          docker tag ros2_gazebo ghaythbz/ros2_gazebo:latest
+          docker tag ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
           docker push ghaythbz/ros2_gazebo:latest
 
+      # Tag and Push Backend Image
       - name: Tag and Push Backend Image
         run: |
-          docker tag backend ghaythbz/backend:latest
+          docker tag backend:latest ghaythbz/backend:latest
           docker push ghaythbz/backend:latest
 
+      # Tag and Push Frontend Image
       - name: Tag and Push Frontend Image
         run: |
-          docker tag frontend ghaythbz/frontend:latest
+          docker tag frontend:latest ghaythbz/frontend:latest
           docker push ghaythbz/frontend:latest
