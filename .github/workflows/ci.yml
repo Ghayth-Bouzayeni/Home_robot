@@ -29,7 +29,12 @@ jobs:
 
       - name: Build all services
         run: docker-compose build
+ 
+      - name: Verify Docker images
+        run: docker images
 
+      - name: Start services (detached)
+        run: docker-compose up -d
       - name: Start services (detached)
         run: docker-compose up -d
 
