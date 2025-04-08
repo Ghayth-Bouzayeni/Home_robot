@@ -71,8 +71,9 @@ jobs:
       # Tag and Push ROS2 Gazebo Image
       - name: Tag and Push ROS2 Gazebo Image
         run: |
-          docker tag home_robot-master_ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
-          docker push ghaythbz/ros2_gazebo:latest
+            docker tag ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
+            docker push ghaythbz/ros2_gazebo:latest
+
 
 
       # Tag and Push Backend Image
