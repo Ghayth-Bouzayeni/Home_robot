@@ -74,12 +74,13 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       # Tag and Push ROS2 Gazebo Image
+      
+
       - name: Tag and Push ROS2 Gazebo Image
         run: |
-            docker tag ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
-            docker push ghaythbz/ros2_gazebo:latest
-
-
+              docker tag home_robot-ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
+              docker push ghaythbz/ros2_gazebo:latest
+          
 
       # Tag and Push Backend Image
       - name: Tag and Push Backend Image
