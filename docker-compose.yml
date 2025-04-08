@@ -38,6 +38,7 @@ services:
   ros2_gazebo:
     build:
       context: ./HomeBot-ROS2-Navigation-main
+    image: ghaythbz/ros2_gazebo:latest  # Added image name for ROS2 Gazebo
     environment:
       - DISPLAY=${DISPLAY}
       - ROS_DOMAIN_ID=42  # Prevents ROS2 network conflicts
