@@ -64,3 +64,21 @@ jobs:
             source /ros2_ws/install/setup.bash
             ros2 launch robot_simulation test_launch.py
           "
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Tag and Push ROS2 Gazebo Image
+        run: |
+          docker tag ros2_gazebo ghaythbz/ros2_gazebo:latest
+          docker push ghaythbz/ros2_gazebo:latest
+
+      - name: Tag and Push Backend Image
+        run: |
+          docker tag backend ghaythbz/backend:latest
+          docker push ghaythbz/backend:latest
+
+      - name: Tag and Push Frontend Image
+        run: |
+          docker tag frontend ghaythbz/frontend:latest
+          docker push ghaythbz/frontend:latest
