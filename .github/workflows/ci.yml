@@ -81,15 +81,14 @@ jobs:
               docker tag home_robot-ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
               docker push ghaythbz/ros2_gazebo:latest
           
-
-      # Tag and Push Backend Image
+     # Tag and Push ROS2 Backend Image
       - name: Tag and Push Backend Image
         run: |
-          docker tag backend:latest ghaythbz/backend:latest
-          docker push ghaythbz/backend:latest
-
-      # Tag and Push Frontend Image
+                docker tag home_robot-backend:latest ghaythbz/backend:latest
+                docker push ghaythbz/backend:latest
+     # Tag and Push ROS2 Frontend Image       
       - name: Tag and Push Frontend Image
         run: |
-          docker tag frontend:latest ghaythbz/frontend:latest
-          docker push ghaythbz/frontend:latest
+                docker tag home_robot-frontend:latest ghaythbz/frontend:latest
+                docker push ghaythbz/frontend:latest
+            
