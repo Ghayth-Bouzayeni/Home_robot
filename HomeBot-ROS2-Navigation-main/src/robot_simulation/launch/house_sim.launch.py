@@ -23,6 +23,7 @@ def generate_launch_description():
     use_simulator = LaunchConfiguration('use_simulator')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     world = LaunchConfiguration('world')
+    use_rviz = LaunchConfiguration('use_rviz')  # Add use_rviz configuration
 
     # Declare the launch arguments (to make them configurable when running the launch file)
     declare_simulator_cmd = DeclareLaunchArgument(
@@ -31,6 +32,10 @@ def generate_launch_description():
         name='rviz_config_file', default_value=default_rviz_config_path, description='RVIZ config file path')
     declare_world_cmd = DeclareLaunchArgument(
         name='world', default_value=world_path, description='Path to the world file')
+    declare_use_rviz_cmd = DeclareLaunchArgument(  # Declare use_rviz argument
+        name='use_rviz',
+        default_value='true',
+        description='Whether to launch RViz')
 
     # Start Gazebo server and client (only if simulator is enabled)
     start_gazebo_server_cmd = IncludeLaunchDescription(
@@ -81,6 +86,7 @@ def generate_launch_description():
     ld.add_action(declare_simulator_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_world_cmd)
+    ld.add_action(declare_use_rviz_cmd)  # Add the use_rviz declaration
 
     # Add the actions to launch the simulator and other nodes
     ld.add_action(start_gazebo_server_cmd)

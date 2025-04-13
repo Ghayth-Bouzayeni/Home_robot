@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MQTT_HOST=mqtt
+    networks:
+      - robot_network
+    depends_on:
+      - mqtt
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - robot_network
+    depends_on:
+      - backend
+
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1884:1883"
+      - "9001:9001"  # WebSocket port for MQTT
+    volumes:
+      - ./mqtt/config:/mosquitto/config
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
+    networks:
+      - robot_network
+
+  ros2_gazebo:
+    build:
+      context: ./HomeBot-ROS2-Navigation-main
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_DOMAIN_ID=42  # Prevents ROS2 network conflicts
+      - MQTT_HOST=mqtt
+      - GAZEBO_MODEL_PATH=/ros2_ws/src/robot_simulation/models
+      - TEST_MODE=true  
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./HomeBot-ROS2-Navigation-main/src:/ros2_ws/src:rw  # RW access for development
+    networks:
+      - robot_network
+    depends_on:
+      - mqtt
+    privileged: true  # Required for Gazebo
+    restart: unless-stopped
+
+networks:
+  robot_network:
+    driver: bridge
+
+volumes:
+  mqtt_data:
+  mqtt_log:

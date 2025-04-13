@@ -1,2 +1,6 @@
 Flask
 paho-mqtt
+
+=======
+pytest
+>>>>>>> devops-backend

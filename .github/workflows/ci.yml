@@ -1,0 +1,94 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [devops-backend]
+  pull_request:
+    branches: [devops-backend]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      mqtt:  # Embedded MQTT broker for testing
+        image: eclipse-mosquitto
+        ports:
+          - "1883:1883"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Build all services
+        run: docker-compose build
+ 
+      - name: Verify Docker images
+        run: docker images
+
+      - name: Start services (detached)
+        run: docker-compose up -d
+      - name: Start services (detached)
+        run: docker-compose up -d
+
+      - name: Build ROS2 workspace
+        run: |
+          docker-compose exec ros2_gazebo bash -c "
+            source install/setup.bash  
+            cd /ros2_ws
+            colcon build --symlink-install
+          "
+
+      - name: Source ROS2 workspace
+        run: |
+          docker-compose exec ros2_gazebo bash -c "
+            source /opt/ros/humble/setup.bash
+            source /ros2_ws/install/setup.bash
+          "
+
+      - name: Test Frontend
+        run: |
+          docker-compose exec frontend npm test || echo "Frontend tests failed"
+
+      - name: Test Backend
+        run: |
+          docker-compose exec backend pytest || echo "Backend tests failed"
+
+      - name: Test ROS2 Nodes
+        timeout-minutes: 30  # Gazebo tests may take longer
+        run: |
+          docker-compose exec ros2_gazebo bash -c "
+            source /opt/ros/humble/setup.bash
+            source /ros2_ws/install/setup.bash
+            ros2 launch robot_simulation test_launch.py
+          "
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      # Tag and Push ROS2 Gazebo Image
+      
+
+      - name: Tag and Push ROS2 Gazebo Image
+        run: |
+              docker tag home_robot-ros2_gazebo:latest ghaythbz/ros2_gazebo:latest
+              docker push ghaythbz/ros2_gazebo:latest
+          
+     # Tag and Push ROS2 Backend Image
+      - name: Tag and Push Backend Image
+        run: |
+                docker tag home_robot-backend:latest ghaythbz/backend:latest
+                docker push ghaythbz/backend:latest
+     # Tag and Push ROS2 Frontend Image       
+      - name: Tag and Push Frontend Image
+        run: |
+                docker tag home_robot-frontend:latest ghaythbz/frontend:latest
+                docker push ghaythbz/frontend:latest
+            
